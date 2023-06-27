@@ -1,0 +1,15 @@
+name: trigger workflow 
+on:
+    push:
+        branches: ["develop"]
+jobs:
+    trigger: 
+        runs-on: ubuntu-latest
+# create a trigger that activates another workflow(the issue one)
+        steps:
+            - name: trigger another workflow
+            run: |
+                curl -X POST https://api.github.com/repos/${{ github.repository }}/actions/workflows/issue.yml/dispatches \
+                -H 'Accept: application/vnd/github.v3+json' \
+                --header 'Autorization: Bearer ${{ secrets.MySecret }}' \
+                --data '{"ref": "${{github.ref}}"}'
